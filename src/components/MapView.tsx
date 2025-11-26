@@ -46,16 +46,9 @@ function Routing({ start, end }: { start: L.LatLngExpression, end: L.LatLngExpre
                 L.latLng(start as any),
                 L.latLng(end as any)
             ],
-            router: L.Routing.osrmv1({
-                serviceUrl: 'https://router.project-osrm.org/route/v1',
-                profile: 'foot'
-            }),
             routeWhileDragging: true,
             showAlternatives: false,
             fitSelectedRoutes: true,
-            lineOptions: {
-                styles: [{ color: '#3b82f6', weight: 6 }]
-            },
             show: false // Hide the itinerary container if desired
         }).addTo(map);
 
