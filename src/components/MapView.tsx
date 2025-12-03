@@ -19,20 +19,45 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
+// Custom User Location Icon
+const UserLocationIcon = L.divIcon({
+    className: 'user-location-marker',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10]
+});
+
 interface MapViewProps {
     selectedLocation: any;
+    userLocation: [number, number] | null;
+    onMapReady?: () => void;
 }
 
 // SIT Tumkur Coordinates
 const CENTER_LAT = 13.3269;
 const CENTER_LNG = 77.1261;
-const ZOOM_LEVEL = 17; // Increased zoom for satellite view
+const ZOOM_LEVEL = 17;
 
-// Campus Bounds (Approximate based on GeoJSON)
+// Campus Bounds
 const CAMPUS_BOUNDS = L.latLngBounds(
     [13.3210, 77.1200], // South-West
     [13.3350, 77.1350]  // North-East
 );
+
+// Map Center Controller
+function MapController({ center, zoom }: { center: [number, number] | null, zoom?: number }) {
+    const map = useMap();
+
+    useEffect(() => {
+        if (center) {
+            map.flyTo(center, zoom || map.getZoom(), {
+                duration: 1.5,
+                easeLinearity: 0.25
+            });
+        }
+    }, [center, zoom, map]);
+
+    return null;
+}
 
 // Routing Component
 function Routing({ start, end }: { start: L.LatLngExpression, end: L.LatLngExpression }) {
@@ -49,7 +74,7 @@ function Routing({ start, end }: { start: L.LatLngExpression, end: L.LatLngExpre
             routeWhileDragging: true,
             showAlternatives: false,
             fitSelectedRoutes: true,
-            show: false // Hide the itinerary container if desired
+            show: false
         }).addTo(map);
 
         return () => {
@@ -60,15 +85,30 @@ function Routing({ start, end }: { start: L.LatLngExpression, end: L.LatLngExpre
     return null;
 }
 
-export default function MapView({ selectedLocation }: MapViewProps) {
+export default function MapView({ selectedLocation, userLocation, onMapReady }: MapViewProps) {
     const [geoJsonData, setGeoJsonData] = useState<any>(null);
-    // Default start point: Administrative Block
-    const [startPoint] = useState<[number, number]>([13.3269, 77.1261]);
+    const [mapCenter, setMapCenter] = useState<[number, number] | null>(null);
 
     useEffect(() => {
         // Load GeoJSON data
         setGeoJsonData(campusPaths);
-    }, []);
+        if (onMapReady) {
+            onMapReady();
+        }
+    }, [onMapReady]);
+
+    // Update map center when user location or selected location changes
+    useEffect(() => {
+        if (selectedLocation) {
+            setMapCenter([selectedLocation.lat, selectedLocation.lng]);
+        }
+    }, [selectedLocation]);
+
+    useEffect(() => {
+        if (userLocation) {
+            setMapCenter(userLocation);
+        }
+    }, [userLocation]);
 
     return (
         <MapContainer
@@ -78,31 +118,47 @@ export default function MapView({ selectedLocation }: MapViewProps) {
             maxBounds={CAMPUS_BOUNDS}
             maxBoundsViscosity={1.0}
             style={{ height: '100%', width: '100%' }}
+            zoomControl={true}
         >
             <TileLayer
                 attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
                 url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
             />
 
+            {/* Map Controller for smooth centering */}
+            <MapController center={mapCenter} zoom={17} />
+
             {/* Render Paths from GeoJSON */}
             {geoJsonData && geoJsonData.features.map((feature: any, index: number) => {
                 if (feature.geometry.type === 'LineString') {
-                    // GeoJSON coordinates are [lng, lat], Leaflet needs [lat, lng]
                     const positions = feature.geometry.coordinates.map((coord: number[]) => [coord[1], coord[0]]);
                     return <Polyline key={index} positions={positions} color="#facc15" weight={4} opacity={0.8} />;
                 }
                 return null;
             })}
 
+            {/* User Location Marker */}
+            {userLocation && (
+                <Marker position={userLocation} icon={UserLocationIcon}>
+                    <Popup>
+                        <div className="popup-title">Your Location</div>
+                        <div className="popup-category">Current Position</div>
+                    </Popup>
+                </Marker>
+            )}
+
+            {/* Selected Location Marker and Routing */}
             {selectedLocation && (
                 <>
                     <Marker position={[selectedLocation.lat, selectedLocation.lng]}>
                         <Popup>
-                            <div className="font-bold">{selectedLocation.name}</div>
-                            <div className="text-sm">{selectedLocation.category}</div>
+                            <div className="popup-title">{selectedLocation.name}</div>
+                            <div className="popup-category">{selectedLocation.category}</div>
                         </Popup>
                     </Marker>
-                    <Routing start={startPoint} end={[selectedLocation.lat, selectedLocation.lng]} />
+                    {userLocation && (
+                        <Routing start={userLocation} end={[selectedLocation.lat, selectedLocation.lng]} />
+                    )}
                 </>
             )}
         </MapContainer>

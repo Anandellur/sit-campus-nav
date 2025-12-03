@@ -1,13 +1,15 @@
-import { Search, MapPin, Navigation } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { Search, MapPin, X } from 'lucide-react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import locations from '../data/locations.json';
 
-interface SidebarProps {
+interface SearchBarProps {
     onLocationSelect: (location: any) => void;
 }
 
-export default function Sidebar({ onLocationSelect }: SidebarProps) {
+export default function SearchBar({ onLocationSelect }: SearchBarProps) {
     const [searchTerm, setSearchTerm] = useState('');
+    const [isFocused, setIsFocused] = useState(false);
+    const searchRef = useRef<HTMLDivElement>(null);
 
     const filteredLocations = useMemo(() => {
         if (!searchTerm) return locations;
@@ -17,47 +19,77 @@ export default function Sidebar({ onLocationSelect }: SidebarProps) {
         );
     }, [searchTerm]);
 
+    const showResults = isFocused && (searchTerm.length > 0 || filteredLocations.length > 0);
+
+    // Handle click outside to close results
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+                setIsFocused(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleLocationClick = (location: any) => {
+        onLocationSelect(location);
+        setSearchTerm('');
+        setIsFocused(false);
+    };
+
+    const handleClear = () => {
+        setSearchTerm('');
+    };
+
     return (
-        <div className="sidebar">
-            <div className="p-4 border-b border-[var(--border)]">
-                <div className="flex items-center gap-2 mb-4">
-                    <Navigation className="text-[var(--primary-color)]" />
-                    <h1 className="text-lg font-bold">SIT Campus Nav</h1>
-                </div>
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] w-4 h-4" />
+        <div className="search-container" ref={searchRef}>
+            <div className={`search-wrapper ${isFocused ? 'focused' : ''}`}>
+                <div className="search-bar">
+                    <Search className="search-icon" size={20} />
                     <input
                         type="text"
-                        placeholder="Search buildings..."
-                        className="input pl-10"
+                        placeholder="Search for buildings, departments..."
+                        className="search-input"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        onFocus={() => setIsFocused(true)}
                     />
-                </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4">
-                <div className="flex flex-col gap-2">
-                    {filteredLocations.map(location => (
+                    {searchTerm && (
                         <button
-                            key={location.id}
-                            className="flex items-start gap-3 p-3 w-full text-left rounded-lg hover:bg-[var(--background)] transition-colors border border-transparent hover:border-[var(--border)]"
-                            onClick={() => onLocationSelect(location)}
+                            className="clear-button"
+                            onClick={handleClear}
+                            aria-label="Clear search"
                         >
-                            <MapPin className="text-[var(--primary-color)] w-5 h-5 mt-0.5 shrink-0" />
-                            <div>
-                                <div className="font-medium">{location.name}</div>
-                                <div className="text-sm text-[var(--text-secondary)]">{location.category}</div>
-                            </div>
+                            <X size={18} />
                         </button>
-                    ))}
-
-                    {filteredLocations.length === 0 && (
-                        <div className="text-center text-[var(--text-secondary)] py-8">
-                            No locations found
-                        </div>
                     )}
                 </div>
+
+                {showResults && (
+                    <div className="search-results">
+                        {filteredLocations.length > 0 ? (
+                            filteredLocations.map(location => (
+                                <button
+                                    key={location.id}
+                                    className="location-item"
+                                    onClick={() => handleLocationClick(location)}
+                                >
+                                    <MapPin className="location-icon" size={20} />
+                                    <div className="location-details">
+                                        <div className="location-name">{location.name}</div>
+                                        <div className="location-category">{location.category}</div>
+                                    </div>
+                                </button>
+                            ))
+                        ) : (
+                            <div className="no-results">
+                                No locations found for "{searchTerm}"
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );
