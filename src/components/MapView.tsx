@@ -1,10 +1,11 @@
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import L from 'leaflet';
 import 'leaflet-routing-machine';
 import { useEffect, useState } from 'react';
 import campusPaths from '../data/campus-paths.json';
+import locations from '../data/locations.json';
 
 // Fix for default marker icon
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -155,12 +156,35 @@ export default function MapView({ selectedLocation, userLocation, onMapReady }: 
                             <div className="popup-title">{selectedLocation.name}</div>
                             <div className="popup-category">{selectedLocation.category}</div>
                         </Popup>
+                        <Tooltip direction="bottom" offset={[0, 20]} opacity={1} permanent className="map-label">
+                            {selectedLocation.name}
+                        </Tooltip>
                     </Marker>
                     {userLocation && (
                         <Routing start={userLocation} end={[selectedLocation.lat, selectedLocation.lng]} />
                     )}
                 </>
             )}
+
+            {/* Render all locations with permanent labels */}
+            {locations.map((location) => (
+                <Marker
+                    key={location.id}
+                    position={[location.lat, location.lng]}
+                    opacity={0} // Hide the default marker, only show label
+                >
+                    <Tooltip
+                        direction="center"
+                        offset={[0, 0]}
+                        opacity={1}
+                        permanent
+                        className="map-label"
+                    >
+                        {location.name}
+                    </Tooltip>
+                </Marker>
+            ))}
+
         </MapContainer>
     );
 }

@@ -19,15 +19,15 @@
         "id": "3",
         "name": "Birla Auditorium",
         "category": "Events",
-        "lat": 13.3280,
-        "lng": 77.1270,
+        "lat": 13.3270,
+        "lng": 77.1266,
         "description": "Main auditorium for events."
     },
     {
         "id": "4",
-        "name": "Boys Hostel Block 1",
+        "name": "Boys Hostel",
         "category": "Hostel",
-        "lat": 13.3250,
+        "lat": 13.3256,
         "lng": 77.1280,
         "description": "Student accommodation."
     },
@@ -35,7 +35,7 @@
         "id": "5",
         "name": "Canteen",
         "category": "Food",
-        "lat": 13.3260,
+        "lat": 13.3263,
         "lng": 77.1265,
         "description": "Main campus canteen."
     },
@@ -49,26 +49,10 @@
     },
     {
         "id": "7",
-        "name": "Mechanical Block",
+        "name": "Mechanical Department",
         "category": "Academic",
         "lat": 13.3265,
         "lng": 77.1258,
         "description": "Mechanical Engineering Department."
-    },
-    {
-        "id": "8",
-        "name": "Science Block",
-        "category": "Academic",
-        "lat": 13.3278,
-        "lng": 77.1262,
-        "description": "Physics and Chemistry labs."
-    },
-    {
-        "id": "10",
-        "name": "Sports Complex",
-        "category": "Sports",
-        "lat": 13.3290,
-        "lng": 77.1275,
-        "description": "Indoor and outdoor sports facilities."
     }
 ]
