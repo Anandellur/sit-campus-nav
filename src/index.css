@@ -458,127 +458,6 @@ body {
   font-size: 15px;
 }
 
-.leaflet-popup-content {
-  margin: var(--spacing-md);
-  font-family: var(--font-sans);
-}
-
-.popup-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.popup-category {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-/* Leaflet Control Customization */
-.leaflet-control-zoom {
-  border: none !important;
-  box-shadow: var(--shadow-md) !important;
-}
-
-.leaflet-control-zoom a {
-  background-color: var(--background) !important;
-  color: var(--text-secondary) !important;
-  border: none !important;
-  width: 36px !important;
-  height: 36px !important;
-  line-height: 36px !important;
-  font-size: 20px !important;
-  transition: all 0.2s !important;
-}
-
-.leaflet-control-zoom a:hover {
-  background-color: var(--border-light) !important;
-  color: var(--text-primary) !important;
-}
-
-.leaflet-control-zoom a:first-child {
-  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
-}
-
-.leaflet-control-zoom a:last-child {
-  border-radius: 0 0 var(--radius-md) var(--radius-md) !important;
-}
-
-/* Routing Control Customization */
-.leaflet-routing-container {
-  background: var(--glass-bg) !important;
-  backdrop-filter: blur(10px);
-  border-radius: var(--radius-lg) !important;
-  box-shadow: var(--shadow-lg) !important;
-  border: none !important;
-}
-
-/* Utility Classes */
-.flex {
-  display: flex;
-}
-
-.flex-col {
-  flex-direction: column;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.items-start {
-  align-items: flex-start;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.gap-2 {
-  gap: var(--spacing-sm);
-}
-
-.gap-3 {
-  gap: var(--spacing-md);
-}
-
-.gap-4 {
-  gap: var(--spacing-lg);
-}
-
-.w-full {
-  width: 100%;
-}
-
-.h-full {
-  height: 100%;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.text-sm {
-  font-size: 13px;
-}
-
-.text-base {
-  font-size: 15px;
-}
-
 .text-lg {
   font-size: 17px;
 }
@@ -635,4 +514,111 @@ body {
 
 .map-label::before {
   display: none;
+}
+
+/* Map Layer Control Styles */
+.layer-control-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.layer-toggle-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #5f6368;
+}
+
+.layer-toggle-button:hover,
+.layer-toggle-button.active {
+  background: #fff;
+  color: #1a73e8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.layer-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 200px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  animation: fadeIn 0.2s ease-out;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.layer-menu-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: #5f6368;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.layer-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.layer-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.layer-option:hover {
+  background: rgba(26, 115, 232, 0.08);
+}
+
+.layer-option.selected {
+  background: rgba(26, 115, 232, 0.12);
+}
+
+.layer-option.selected .layer-label {
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.layer-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.layer-option.selected .layer-preview {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.3);
+}
+
+.layer-label {
+  font-size: 14px;
+  color: #202124;
+  font-weight: 500;
 }

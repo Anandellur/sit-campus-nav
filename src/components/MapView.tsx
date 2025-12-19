@@ -1,4 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, Tooltip, useMapEvents } from 'react-leaflet';
+import MapLayerControl, { MapLayer } from './MapLayerControl';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import L from 'leaflet';
@@ -60,6 +61,16 @@ function MapController({ center, zoom }: { center: [number, number] | null, zoom
     return null;
 }
 
+// Zoom Handler to track map zoom level
+function ZoomHandler({ onZoomChange }: { onZoomChange: (zoom: number) => void }) {
+    const map = useMapEvents({
+        zoomend: () => {
+            onZoomChange(map.getZoom());
+        }
+    });
+    return null;
+}
+
 // Routing Component
 function Routing({ start, end }: { start: L.LatLngExpression, end: L.LatLngExpression }) {
     const map = useMap();
@@ -89,6 +100,8 @@ function Routing({ start, end }: { start: L.LatLngExpression, end: L.LatLngExpre
 export default function MapView({ selectedLocation, userLocation, onMapReady }: MapViewProps) {
     const [geoJsonData, setGeoJsonData] = useState<any>(null);
     const [mapCenter, setMapCenter] = useState<[number, number] | null>(null);
+    const [currentZoom, setCurrentZoom] = useState(ZOOM_LEVEL);
+    const [currentLayer, setCurrentLayer] = useState<MapLayer>('satellite');
 
     useEffect(() => {
         // Load GeoJSON data
@@ -112,79 +125,100 @@ export default function MapView({ selectedLocation, userLocation, onMapReady }: 
     }, [userLocation]);
 
     return (
-        <MapContainer
-            center={[CENTER_LAT, CENTER_LNG]}
-            zoom={ZOOM_LEVEL}
-            minZoom={15}
-            maxBounds={CAMPUS_BOUNDS}
-            maxBoundsViscosity={1.0}
-            style={{ height: '100%', width: '100%' }}
-            zoomControl={true}
-        >
-            <TileLayer
-                attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-                url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            />
+        <div style={{ position: 'relative', height: '100%', width: '100%' }}>
+            <MapContainer
+                center={[CENTER_LAT, CENTER_LNG]}
+                zoom={ZOOM_LEVEL}
+                minZoom={15}
+                maxBounds={CAMPUS_BOUNDS}
+                maxBoundsViscosity={1.0}
+                style={{ height: '100%', width: '100%', zIndex: 0 }}
+                zoomControl={false}
+            >
+                {/* Layer Switching Logic */}
+                {currentLayer === 'satellite' && (
+                    <TileLayer
+                        attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    />
+                )}
+                {currentLayer === 'standard' && (
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                )}
 
-            {/* Map Controller for smooth centering */}
-            <MapController center={mapCenter} zoom={17} />
+                {/* Map Controller for smooth centering */}
+                <MapController center={mapCenter} zoom={17} />
 
-            {/* Render Paths from GeoJSON */}
-            {geoJsonData && geoJsonData.features.map((feature: any, index: number) => {
-                if (feature.geometry.type === 'LineString') {
-                    const positions = feature.geometry.coordinates.map((coord: number[]) => [coord[1], coord[0]]);
-                    return <Polyline key={index} positions={positions} color="#facc15" weight={4} opacity={0.8} />;
-                }
-                return null;
-            })}
+                {/* Zoom Handler */}
+                <ZoomHandler onZoomChange={setCurrentZoom} />
 
-            {/* User Location Marker */}
-            {userLocation && (
-                <Marker position={userLocation} icon={UserLocationIcon}>
-                    <Popup>
-                        <div className="popup-title">Your Location</div>
-                        <div className="popup-category">Current Position</div>
-                    </Popup>
-                </Marker>
-            )}
+                {/* Render Paths from GeoJSON */}
+                {geoJsonData && geoJsonData.features.map((feature: any, index: number) => {
+                    if (feature.geometry.type === 'LineString') {
+                        const positions = feature.geometry.coordinates.map((coord: number[]) => [coord[1], coord[0]]);
+                        return <Polyline key={index} positions={positions} color="#facc15" weight={4} opacity={0.8} />;
+                    }
+                    return null;
+                })}
 
-            {/* Selected Location Marker and Routing */}
-            {selectedLocation && (
-                <>
-                    <Marker position={[selectedLocation.lat, selectedLocation.lng]}>
+                {/* User Location Marker */}
+                {userLocation && (
+                    <Marker position={userLocation} icon={UserLocationIcon}>
                         <Popup>
-                            <div className="popup-title">{selectedLocation.name}</div>
-                            <div className="popup-category">{selectedLocation.category}</div>
+                            <div className="popup-title">Your Location</div>
+                            <div className="popup-category">Current Position</div>
                         </Popup>
-                        <Tooltip direction="bottom" offset={[0, 20]} opacity={1} permanent className="map-label">
-                            {selectedLocation.name}
-                        </Tooltip>
                     </Marker>
-                    {userLocation && (
-                        <Routing start={userLocation} end={[selectedLocation.lat, selectedLocation.lng]} />
-                    )}
-                </>
-            )}
+                )}
 
-            {/* Render all locations with permanent labels */}
-            {locations.map((location) => (
-                <Marker
-                    key={location.id}
-                    position={[location.lat, location.lng]}
-                    opacity={0} // Hide the default marker, only show label
-                >
-                    <Tooltip
-                        direction="center"
-                        offset={[0, 0]}
-                        opacity={1}
-                        permanent
-                        className="map-label"
+                {/* Selected Location Marker and Routing */}
+                {selectedLocation && (
+                    <>
+                        <Marker position={[selectedLocation.lat, selectedLocation.lng]}>
+                            <Popup>
+                                <div className="popup-title">{selectedLocation.name}</div>
+                                <div className="popup-category">{selectedLocation.category}</div>
+                            </Popup>
+                            {currentZoom >= 17 && !(currentLayer === 'standard' && selectedLocation.hideOnStandard) && (
+                                <Tooltip direction="bottom" offset={[0, 20]} opacity={1} permanent className="map-label">
+                                    {selectedLocation.name}
+                                </Tooltip>
+                            )}
+                        </Marker>
+                        {userLocation && (
+                            <Routing start={userLocation} end={[selectedLocation.lat, selectedLocation.lng]} />
+                        )}
+                    </>
+                )}
+
+                {/* Render all locations with permanent labels */}
+                {locations.map((location) => (
+                    <Marker
+                        key={location.id}
+                        position={[location.lat, location.lng]}
+                        opacity={0} // Hide the default marker, only show label
                     >
-                        {location.name}
-                    </Tooltip>
-                </Marker>
-            ))}
+                        {currentZoom >= 17 && !(currentLayer === 'standard' && location.hideOnStandard) && (
+                            <Tooltip
+                                direction="center"
+                                offset={[0, 0]}
+                                opacity={1}
+                                permanent
+                                className="map-label"
+                            >
+                                {location.name}
+                            </Tooltip>
+                        )}
+                    </Marker>
+                ))}
 
-        </MapContainer>
+            </MapContainer>
+
+            {/* Floating Layer Control */}
+            <MapLayerControl currentLayer={currentLayer} onLayerChange={setCurrentLayer} />
+        </div>
     );
 }

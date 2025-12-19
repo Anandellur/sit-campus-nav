@@ -3,56 +3,189 @@
         "id": "1",
         "name": "Administrative Block",
         "category": "Admin",
-        "lat": 13.3269,
-        "lng": 77.1261,
-        "description": "Main administrative office."
+        "lat": 13.32688,
+        "lng": 77.12620,
+        "description": "Main administrative office.",
+        "hideOnStandard": false
     },
     {
         "id": "2",
         "name": "Library",
         "category": "Academic",
-        "lat": 13.3275,
-        "lng": 77.1255,
-        "description": "Central library."
+        "lat": 13.32718,
+        "lng": 77.12531,
+        "description": "Central library.",
+        "hideOnStandard": false
     },
     {
         "id": "3",
         "name": "Birla Auditorium",
         "category": "Events",
-        "lat": 13.3270,
-        "lng": 77.1266,
-        "description": "Main auditorium for events."
-    },
-    {
-        "id": "4",
-        "name": "Boys Hostel",
-        "category": "Hostel",
-        "lat": 13.3256,
-        "lng": 77.1280,
-        "description": "Student accommodation."
+        "lat": 13.32688,
+        "lng": 77.12657,
+        "description": "Main auditorium for events.",
+        "hideOnStandard": false
     },
     {
         "id": "5",
         "name": "Canteen",
         "category": "Food",
-        "lat": 13.3263,
-        "lng": 77.1265,
-        "description": "Main campus canteen."
+        "lat": 13.32586,
+        "lng": 77.12707,
+        "description": "Main campus canteen.",
+        "hideOnStandard": false
     },
     {
         "id": "6",
         "name": "CSE Department",
         "category": "Academic",
-        "lat": 13.3272,
-        "lng": 77.1268,
-        "description": "Computer Science & Engineering."
+        "lat": 13.32601,
+        "lng": 77.12632,
+        "description": "Computer Science & Engineering.",
+        "hideOnStandard": false
     },
     {
         "id": "7",
         "name": "Mechanical Department",
         "category": "Academic",
-        "lat": 13.3265,
-        "lng": 77.1258,
-        "description": "Mechanical Engineering Department."
+        "lat": 13.32672,
+        "lng": 77.12480,
+        "description": "Mechanical Engineering Department.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "11",
+        "name": "Stadium",
+        "category": "Sports",
+        "lat": 13.32716,
+        "lng": 77.12326,
+        "description": "Campus stadium.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "12",
+        "name": "E&C Department",
+        "category": "Academic",
+        "lat": 13.32587,
+        "lng": 77.12485,
+        "description": "Electronics and Communication Engineering.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "13",
+        "name": "Organic Waste Plant",
+        "category": "Facilities",
+        "lat": 13.32551,
+        "lng": 77.12572,
+        "description": "Organic waste treatment plant.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "14",
+        "name": "GJCB Block",
+        "category": "Academic",
+        "lat": 13.32638,
+        "lng": 77.12519,
+        "description": "Golden Jubilee Centenary Block.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "15",
+        "name": "Physics & Chemistry Lab",
+        "category": "Academic",
+        "lat": 13.32642,
+        "lng": 77.12651,
+        "description": "Science laboratories.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "16",
+        "name": "Civil Department",
+        "category": "Academic",
+        "lat": 13.32649,
+        "lng": 77.12569,
+        "description": "Civil Engineering Department.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "17",
+        "name": "SIT Back Gate",
+        "category": "Entrance",
+        "lat": 13.32778,
+        "lng": 77.12446,
+        "description": "Rear entrance to the campus.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "18",
+        "name": "Boys Hostel",
+        "category": "Residential",
+        "lat": 13.32657,
+        "lng": 77.12825,
+        "description": "Student accommodation.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "19",
+        "name": "SIT Entrance",
+        "category": "Entrance",
+        "lat": 13.33169,
+        "lng": 77.12731,
+        "description": "Main campus entrance.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "20",
+        "name": "Temple",
+        "category": "Facilities",
+        "lat": 13.32846,
+        "lng": 77.12672,
+        "description": "Campus temple.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "21",
+        "name": "Parking",
+        "category": "Facilities",
+        "lat": 13.32606,
+        "lng": 77.12586,
+        "description": "Vehicle parking area.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "22",
+        "name": "Media Center",
+        "category": "Facilities",
+        "lat": 13.32565,
+        "lng": 77.12640,
+        "description": "Campus media center.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "23",
+        "name": "Health Center",
+        "category": "Facilities",
+        "lat": 13.32612,
+        "lng": 77.12712,
+        "description": "SIT Health Center and Society.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "24",
+        "name": "Basketball Court",
+        "category": "Sports",
+        "lat": 13.32779,
+        "lng": 77.12668,
+        "description": "Outdoor basketball court.",
+        "hideOnStandard": false
+    },
+    {
+        "id": "25",
+        "name": "SIT Coffee Shop",
+        "category": "Food",
+        "lat": 13.32765,
+        "lng": 77.12499,
+        "description": "Campus coffee shop.",
+        "hideOnStandard": false
     }
 ]
