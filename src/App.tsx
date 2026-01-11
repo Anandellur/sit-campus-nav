@@ -1,71 +1,26 @@
-import { useState, useCallback } from 'react';
-import MapView from './components/MapView';
-import SearchBar from './components/Sidebar';
-import LocationButton from './components/LocationButton';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Home from './pages/Home';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 function App() {
-  const [selectedLocation, setSelectedLocation] = useState<any>(null);
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [isLocating, setIsLocating] = useState(false);
-  const [locationActive, setLocationActive] = useState(false);
-
-  const handleGetUserLocation = useCallback(() => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
-      return;
-    }
-
-    setIsLocating(true);
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setUserLocation([latitude, longitude]);
-        setLocationActive(true);
-        setIsLocating(false);
-      },
-      (error) => {
-        setIsLocating(false);
-        let errorMessage = 'Unable to retrieve your location';
-
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage = 'Location permission denied. Please enable location access in your browser settings.';
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMessage = 'Location information is unavailable.';
-            break;
-          case error.TIMEOUT:
-            errorMessage = 'Location request timed out.';
-            break;
-        }
-
-        alert(errorMessage);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-      }
-    );
-  }, []);
-
   return (
-    <div className="w-full h-full">
-      <SearchBar onLocationSelect={setSelectedLocation} />
-      <div className="map-container">
-        <MapView
-          selectedLocation={selectedLocation}
-          userLocation={userLocation}
-        />
-      </div>
-      <LocationButton
-        onClick={handleGetUserLocation}
-        loading={isLocating}
-        active={locationActive}
-      />
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          } />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
