@@ -1,0 +1,141 @@
+/* Base Layout */
+.auth-layout {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffffff;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Logo Section */
+.auth-logo-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /* Initially takes full width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+    /* Light gray/white background */
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 10;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.8s ease;
+}
+
+.auth-logo {
+    width: 120px;
+    height: auto;
+    transition: all 0.8s ease;
+}
+
+.logo-text {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease 0.3s;
+    /* Delayed fade in */
+}
+
+.logo-text h1 {
+    font-size: 2rem;
+    color: #1a73e8;
+    margin: 0;
+    line-height: 1;
+}
+
+.logo-text span {
+    font-size: 0.875rem;
+    color: #64748b;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
+/* Split State - Animation Target */
+.auth-layout.split .auth-logo-section {
+    width: 40%;
+    /* Shrink to left side */
+    background-color: #eff6ff;
+    /* Slight blue tint for side panel */
+}
+
+.auth-layout.split .logo-container {
+    transform: scale(0.9);
+}
+
+.auth-layout.split .logo-text {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Content Section */
+.auth-content-section {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.8s ease 0.6s;
+    /* Delayed start */
+    background: white;
+}
+
+.auth-layout.split .auth-content-section {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.auth-content-wrapper {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+}
+
+/* Auth Title Styles (Moved from Auth.css or redefined here for consistency) */
+.auth-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    color: #64748b;
+    margin-bottom: 2rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .auth-layout.split .auth-logo-section {
+        width: 100%;
+        height: 30%;
+    }
+
+    .auth-layout.split .auth-content-section {
+        width: 100%;
+        height: 70%;
+        top: 30%;
+        right: auto;
+        left: 0;
+    }
+
+    .auth-logo {
+        width: 80px;
+    }
+}

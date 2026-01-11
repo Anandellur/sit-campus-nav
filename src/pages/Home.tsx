@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, LogOut, MessageSquarePlus } from 'lucide-react';
 import FeedbackModal from '../components/FeedbackModal';
+import logo from '../assets/logo.png';
 
 export default function Home() {
     const [selectedLocation, setSelectedLocation] = useState<any>(null);
@@ -61,6 +62,33 @@ export default function Home() {
 
     return (
         <div className="w-full h-full relative">
+            {/* Logo */}
+            <div style={{
+                position: 'absolute',
+                top: '1rem',
+                left: '1rem',
+                zIndex: 1000,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                background: 'white',
+                padding: '8px 16px',
+                borderRadius: '50px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                pointerEvents: 'none', // Allow clicks to pass through if it covers map interaction, though with this size it shouldn't be an issue
+                userSelect: 'none'
+            }}>
+                <img
+                    src={logo}
+                    alt="SIT Campus Nav Logo"
+                    style={{ height: '32px', width: 'auto' }}
+                />
+                <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.1' }}>
+                    <span style={{ fontWeight: 700, fontSize: '15px', color: '#1a73e8' }}>SIT</span>
+                    <span style={{ fontWeight: 600, fontSize: '11px', color: '#5f6368', letterSpacing: '0.5px' }}>CAMPUS NAV</span>
+                </div>
+            </div>
+
             <SearchBar onLocationSelect={setSelectedLocation} />
 
             {/* Auth Controls */}
